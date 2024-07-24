@@ -1,4 +1,4 @@
-   st.title("Prueba sencilla de GPT-3.5 Turbo")
+st.title("Prueba sencilla de GPT-3.5 Turbo")
 
    prompt = st.text_area("Introduce tu pregunta o instrucción:")
    if st.button("Generar respuesta"):
