@@ -1,8 +1,10 @@
 import streamlit as st
 import openai
 
-# Configuración de la API key de OpenAI (reemplázala con tu API key real)
-openai.api_key = st.secrets["my_proud"]  
+headers = {
+    "authorization": st.secrets["my_proud"],
+    "content-type": "application/json"
+}
 
 def generar_respuesta(prompt):
   """Genera una respuesta de GPT-3.5 Turbo."""
