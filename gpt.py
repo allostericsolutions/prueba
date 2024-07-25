@@ -1,9 +1,6 @@
 import streamlit as st
 import openai
 
-# Debugging check (comment out in production)
-# st.write(st.secrets.keys())  # Check accessible keys while debugging
-
 # Safeguard against missing secrets
 if "my_proud" in st.secrets and "openai_api_key" in st.secrets["my_proud"]:
     openai.api_key = st.secrets["my_proud"]["openai_api_key"]
@@ -14,7 +11,7 @@ else:
 def generar_respuesta(prompt):
     """Genera una respuesta de GPT-4."""
     try:
-        response = openai.ChatCompletion.create(  # Correct method name to access completion
+        response = openai.ChatCompletion.create(  # Correct method name
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
@@ -25,7 +22,7 @@ def generar_respuesta(prompt):
         )
         return response.choices[0].message['content'].strip()
 
-    except openai.error.OpenAIError as e:
+    except openai.error.OpenAIError as e:  # Corrected class name
         return f"Error en la API de OpenAI: {e}"
 
 # Streamlit interface
