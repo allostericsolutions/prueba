@@ -8,15 +8,11 @@ logging.basicConfig(level=logging.INFO)
 # Constants
 API_DOCS_URL = "https://docs.streamlit.io/library/api-reference"
 
-# Retrieve and validate API key
-OPENAI_API_KEY = st.secrets["openai"]["OPENAI_API_KEY"] 
-if not OPENAI_API_KEY:
-    st.error("Please add your OpenAI API key to the Streamlit Secrets in the settings.")
-    st.stop()
+# No necesitas recuperar la clave API aquí
+# OPENAI_API_KEY = st.secrets["openai"]["OPENAI_API_KEY"]  
 
-# Assign OpenAI API Key
-openai.api_key = OPENAI_API_KEY
-client = openai.OpenAI()
+# Crea el objeto client sin pasar la clave API
+client = openai.OpenAI() 
 
 def initialize_conversation():
     """
