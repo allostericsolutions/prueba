@@ -1,4 +1,4 @@
-import streamlit as st
+mport streamlit as st
 import openai
 
 # Safeguard against missing secrets
@@ -11,7 +11,7 @@ else:
 # Test API key by making a simple request
 def test_api_key():
     try:
-        response = openai.ChatCompletion.create(  # Correct method name
+        response = openai.ChatCompletion.create(  # Updated method call
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
