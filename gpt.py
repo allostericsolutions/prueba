@@ -1,20 +1,20 @@
 import streamlit as st
 import openai
 
-# Uncomment to see contents of secrets (remove or comment out in production)
-# st.write(st.secrets)
+# Debugging check (comment out in production)
+# st.write(st.secrets.keys())  # Check accessible keys while debugging
 
-# Configure the OpenAI API key with Streamlit secrets
-try:
+# Safeguard against missing secrets
+if "my_proud" in st.secrets and "openai_api_key" in st.secrets["my_proud"]:
     openai.api_key = st.secrets["my_proud"]["openai_api_key"]
-except KeyError:
-    st.error("Missing OpenAI API key in secrets.")
-    st.stop()  # Stop further execution if the key is missing
+else:
+    st.error("OpenAI API key is missing from secrets.")
+    st.stop()  # Stop execution if the key is missing
 
 def generar_respuesta(prompt):
     """Genera una respuesta de GPT-4."""
     try:
-        response = openai.ChatCompletion.create(  # Correct method name
+        response = openai.ChatCompletion.create(  # Correct method name to access completion
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
@@ -25,7 +25,7 @@ def generar_respuesta(prompt):
         )
         return response.choices[0].message['content'].strip()
 
-    except openai.error.OpenAIError as e:  # Use proper casing for OpenAIError
+    except openai.error.OpenAIError as e:
         return f"Error en la API de OpenAI: {e}"
 
 # Streamlit interface
