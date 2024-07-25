@@ -5,14 +5,6 @@ import openai
 if "my_proud" in st.secrets and "openai_api_key" in st.secrets["my_proud"]:
     openai.api_key = st.secrets["my_proud"]["openai_api_key"]
 else:
-    st.error("openai api key is missing from secrets.")
-    st.stop()  # stop execution if the key is missingimport streamlit as st
-import openai
-
-# safeguard against missing secrets
-if "my_proud" in st.secrets and "openai_api_key" in st.secrets["my_proud"]:
-    openai.api_key = st.secrets["my_proud"]["openai_api_key"]
-else:
     st.error("OpenAI API key is missing from secrets.")
     st.stop()  # stop execution if the key is missing
 
@@ -38,26 +30,3 @@ st.title("Prueba de API Key de OpenAI")
 if st.button("Probar API Key"):
     respuesta = test_api_key()
     st.write("**Respuesta del API:**", respuesta)
-
-# test api key by making a simple request
-def test_api_key():
-    try:
-        response = openai.ChatCompletion.create(  # Corrected method call
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "you are a helpful assistant."},
-                {"role": "user", "content": "hello, how are you?"}  # sample prompt
-            ],
-            max_tokens=5,  # simple response
-        )
-        return response.choices[0].message['content'].strip()
-
-    except Exception as e:  # Corrected exception handling
-        return f"error en la api de openai: {e}"
-
-# streamlit interface
-st.title("prueba de api key de openai")
-
-if st.button("probar api key"):
-    respuesta = test_api_key()
-    st.write("**respuesta del api:**", respuesta)
