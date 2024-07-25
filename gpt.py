@@ -8,31 +8,25 @@ else:
     st.error("OpenAI API key is missing from secrets.")
     st.stop()  # Stop execution if the key is missing
 
-def generar_respuesta(prompt):
-    """Genera una respuesta de GPT-4."""
+# Test API key by making a simple request
+def test_api_key():
     try:
         response = openai.ChatCompletion.create(  # Correct method name
             model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt}
+                {"role": "user", "content": "Hello, how are you?"}  # Sample prompt
             ],
-            max_tokens=50,
-            temperature=0.7,
+            max_tokens=5,  # Simple response
         )
         return response.choices[0].message['content'].strip()
 
-    except openai.error.OpenAIError as e:  # Corrected class name
+    except Exception as e:  # Catch all exceptions for simplicity
         return f"Error en la API de OpenAI: {e}"
 
 # Streamlit interface
-st.title("Prueba sencilla de GPT-4")
+st.title("Prueba de API Key de OpenAI")
 
-prompt = st.text_area("Introduce tu pregunta o instrucción:")
-
-if st.button("Generar respuesta"):
-    if prompt:
-        respuesta = generar_respuesta(prompt)
-        st.write("**Respuesta:**", respuesta)
-    else:
-        st.warning("Por favor, introduce una pregunta o instrucción.")
+if st.button("Probar API Key"):
+    respuesta = test_api_key()
+    st.write("**Respuesta del API:**", respuesta)
