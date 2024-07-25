@@ -7,7 +7,7 @@ openai.api_key = st.secrets["my_proud"]["openai_api_key"]
 def generar_respuesta(prompt):
     """Genera una respuesta de GPT-4."""
     response = openai.ChatCompletion.create(
-        model="gpt-4", 
+        model="gpt-4",  # O "gpt-4-0314"
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
