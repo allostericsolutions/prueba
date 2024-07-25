@@ -1,6 +1,6 @@
 streamlit
 streamlit-chat
-openai==0.28.0
+openai
 requests
 Image
 langchain
