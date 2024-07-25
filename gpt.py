@@ -1,30 +1,78 @@
-import streamlit as st
 import openai
+import logging
 
-# Salvaguardar contra secretos faltantes
-if "my_proud" in st.secrets and "openai_api_key" in st.secrets["my_proud"]:
-    openai.api_key = st.secrets["my_proud"]["openai_api_key"]
-else:
-    st.error("OpenAI API key is missing from secrets.")
-    st.stop()  # Detener ejecución si la clave está faltando
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
-# Probar la clave API haciendo una solicitud simple
-def test_api_key():
+# Constants
+API_DOCS_URL = "https://docs.streamlit.io/library/api-reference"
+
+# Retrieve and validate API key
+OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", None)
+if not OPENAI_API_KEY:
+    print("Please add your OpenAI API key to the Streamlit secrets.toml file.")
+    exit()
+
+# Assign OpenAI API Key
+openai.api_key = OPENAI_API_KEY
+client = openai.OpenAI()
+
+def initialize_conversation():
+    """
+    Initialize the conversation history with system and assistant messages.
+
+    Returns:
+    - list: Initialized conversation history.
+    """
+    assistant_message = "Hello! How can I assist you today?"
+
+    conversation_history = [
+        {"role": "system", "content": "You are a helpful and informative AI assistant."},
+        {"role": "system", "content": "You were created by OpenAI and trained on a massive dataset."},
+        {"role": "system", "content": "Refer to conversation history to provide context to your response."},
+        {"role": "assistant", "content": assistant_message}
+    ]
+    return conversation_history
+
+def get_chat_response(user_input, conversation_history):
+    """
+    Gets a response from the OpenAI API.
+
+    Parameters:
+    - user_input (str): The user's input.
+    - conversation_history (list): The current conversation history.
+
+    Returns:
+    - str: The AI's response.
+    """
+    conversation_history.append({"role": "user", "content": user_input})
+
     try:
-        prompt = "You are a helpful assistant. User: Hello, how are you? Assistant:"
-        response = openai.Completion.create(
-            model="text-davinci-002",
-            prompt=prompt,
-            max_tokens=5,  # Respuesta simple
+        model_engine = "gpt-4o-mini"
+        response = client.chat.completions.create(
+            model=model_engine,
+            messages=conversation_history
         )
-        return response.choices[0].text.strip()
+        assistant_reply = response.choices[0].message.content
+        conversation_history.append({"role": "assistant", "content": assistant_reply})
+        return assistant_reply
+    except OpenAIError as e:
+        logging.error(f"Error occurred: {e}")
+        return f"Error: {str(e)}"
 
-    except Exception as e:  # Manejo de excepciones
-        return f"Error en la API de OpenAI: {e}"
+def main():
+    """
+    Main function to handle chat interactions.
+    """
+    conversation_history = initialize_conversation()
 
-# Interfaz de Streamlit
-st.title("Prueba de API Key de OpenAI")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "exit":
+            break
 
-if st.button("Probar API Key"):
-    respuesta = test_api_key()
-    st.write("**Respuesta del API:**", respuesta)
+        response = get_chat_response(user_input, conversation_history)
+        print(f"Chatbot: {response}")
+
+if __name__ == "__main__":
+    main()
