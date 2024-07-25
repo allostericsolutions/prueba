@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 API_DOCS_URL = "https://docs.streamlit.io/library/api-reference"
 
 # Retrieve and validate API key
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]  # Obtén la clave API de Streamlit Cloud
+OPENAI_API_KEY = st.secrets["openai"]["OPENAI_API_KEY"] 
 if not OPENAI_API_KEY:
     st.error("Please add your OpenAI API key to the Streamlit Secrets in the settings.")
     st.stop()
